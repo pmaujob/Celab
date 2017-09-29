@@ -34,6 +34,35 @@
     transition: width 0.5s, height 0.5s;
 }
 
+/* Logo cliente */
+
+.logo-client{
+    position: fixed;
+    bottom: -146px;
+    left: 16px;
+    background-color: #ffffff;
+    width: 140px;
+    height: 140px;
+    border-radius: 6px 6px 0 0;
+    -webkit-box-shadow: 0px 0px 17px 1px;
+    -moz-box-shadow: 0px 0px 17px 1px;
+    -o-box-shadow: 0px 0px 17px 1px;
+    -ms-box-shadow: 0px 0px 17px 1px;
+    box-shadow: 0px 0px 17px 1px;
+    -webkit-transition: bottom 0.5s;
+    -moz-transition: bottom 0.5s;
+    -o-transition: bottom 0.5s;
+    -ms-transition: bottom 0.5s;
+    transition: bottom 0.5s;
+}
+
+.logo-client img{
+    max-width: 100px;
+    margin-top: 16px;
+    margin-left: 50%;
+    transform: translateX(-50%);
+}
+
 /* Cambiar Color de input materialize*/
 
 /* Icono */

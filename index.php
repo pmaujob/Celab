@@ -22,7 +22,7 @@ if (!$sess->varExist('user')) {
             <script type="text/javascript" src="Admin/Views/js/login.js"></script>
             <link rel="stylesheet" type="text/css" href="Publics/css/stylesLogin.css">
         </head>
-        <body onkeyup = "if (event.keyCode == 13) login();">
+        <body onload="onLoad();" onkeyup = "if (event.keyCode == 13) login();">
             <div id="loading" class="loading">
                 <div class="logo-load">
                     <div class="preloader-wrapper big active valign-wrapper">
@@ -66,6 +66,9 @@ if (!$sess->varExist('user')) {
                     </div>
                 </div>
                 <div class="col m3 l4"></div>
+                <div id="logoc" class="logo-client">
+                    <img src="<?php echo $pRootHtml . "/Publics/images/Admin/logo-client.png"; ?>">
+                </div>
             </div>
         </body>
     </html>
