@@ -1,6 +1,6 @@
 <?php 
 
-$pRootHtml = 'http://' . $_SERVER['SERVER_NAME'] . '/Scorpio/';
+$pRootHtml = 'http://' . $_SERVER['SERVER_NAME'] . '/Celab/';
 
 ?>
 

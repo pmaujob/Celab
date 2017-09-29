@@ -1,3 +1,9 @@
+function onLoad(){
+    
+    document.getElementById('logoc').style.bottom = "0";
+    
+}
+
 function login() {
 
     Materialize.Toast.removeAll();
