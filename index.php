@@ -1,12 +1,12 @@
 <?php
 @session_start();
 
-$_SESSION['pRoot'] = dirname(__FILE__);
-$_SESSION['pRootHtml'] = 'http://' . $_SERVER['SERVER_NAME'] . '/Celab';
-$pRoot = $_SESSION['pRoot'];
-$pRootHtml = $_SESSION['pRootHtml'];
+$_SESSION['pRootC'] = dirname(__FILE__);
+$_SESSION['pRootHtmlC'] = 'http://' . $_SERVER['SERVER_NAME'] . '/Celab';
+$pRootC = $_SESSION['pRootC'];
+$pRootHtmlC = $_SESSION['pRootHtmlC'];
 
-require_once $pRoot . '/Libraries/SessionVars.php';
+require_once $pRootC . '/Libraries/SessionVars.php';
 
 $sess = new SessionVars();
 
@@ -18,7 +18,7 @@ if (!$sess->varExist('user')) {
         <head>
             <meta charset="UTF-8">
             <title>Celab</title>
-            <?php include_once $pRoot . '/Admin/Views/header.php'; ?>
+            <?php include_once $pRootC . '/Admin/Views/header.php'; ?>
             <script type="text/javascript" src="Admin/Views/js/login.js"></script>
             <link rel="stylesheet" type="text/css" href="Publics/css/stylesLogin.css">
         </head>
@@ -67,7 +67,7 @@ if (!$sess->varExist('user')) {
                 </div>
                 <div class="col m3 l4"></div>
                 <div id="logoc" class="logo-client">
-                    <img src="<?php echo $pRootHtml . "/Publics/images/Admin/logo-client.png"; ?>">
+                    <img src="<?php echo $pRootHtmlC . "/Publics/images/Admin/logo-client.png"; ?>">
                 </div>
             </div>
         </body>
@@ -75,6 +75,6 @@ if (!$sess->varExist('user')) {
     <?php
 } else {
 
-    header("Location: $pRootHtml/Views/index.php");
+    header("Location: $pRootHtmlC/Views/index.php");
 }
 ?>

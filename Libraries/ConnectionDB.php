@@ -63,7 +63,7 @@ class ConnectionDB {
         
         $this->closeConnection();
 
-        return $rt;
+        return $rt->fetchAll(PDO::FETCH_OBJ);
     }
 
     public function afect($manager,$sql) {
