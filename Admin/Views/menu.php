@@ -1,11 +1,11 @@
 <?php
 @session_start();
 
-$pRoot = $_SESSION['pRoot'];
-$pRootHtml = $_SESSION['pRootHtml'];
+$pRootC = $_SESSION['pRootC'];
+$pRootHtmlC = $_SESSION['pRootHtmlC'];
 
-require_once $pRoot . '/Admin/Models/MGetMenu.php';
-require_once $pRoot . '/Libraries/SessionVars.php';
+require_once $pRootC . '/Admin/Models/MGetMenu.php';
+require_once $pRootC . '/Libraries/SessionVars.php';
 
 $modules = MGetMenu::getMenu(2, null);
 $functions = MGetMenu::getMenu(1, 1);
@@ -41,7 +41,7 @@ $sess = new SessionVars();
             </a>
             <ul class='dropdown-content' id="dropdown1">
                 <li><a href="#!" style="color: #03A9F4;"><i class="material-icons">vpn_key</i>Cambiar Contraseña</a></li>
-                <li><a href="<?php echo $pRootHtml . '/Admin/Controllers/CLogout.php' ?>"><i class="material-icons">exit_to_app</i>Cerrar Sesión</a></li>
+                <li><a href="<?php echo $pRootHtmlC . '/Admin/Controllers/CLogout.php' ?>"><i class="material-icons">exit_to_app</i>Cerrar Sesión</a></li>
             </ul>
         </div>
     </div>
@@ -53,9 +53,9 @@ $sess = new SessionVars();
         <li>
             <div class="user-view">
                 <div class="background">
-                    <img src="<?php echo $pRootHtml . '/Publics/images/background-user.jpg'; ?>">
+                    <img src="<?php echo $pRootHtmlC . '/Publics/images/background-user.jpg'; ?>">
                 </div>
-                <a href="#!user"><img class="circle" src="<?php echo $pRootHtml . '/Publics/images/logoUser.png'; ?>"></a>
+                <a href="#!user"><img class="circle" src="<?php echo $pRootHtmlC . '/Publics/images/logoUser.png'; ?>"></a>
                 <a href="#!name"><span class="name white-text"><?php echo $sess->getValue('user'); ?></span></a>
                 <a href="#!email"><span class="email white-text"><?php echo $sess->getValue('email'); ?></span></a>
             </div>

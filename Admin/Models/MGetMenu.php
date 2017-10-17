@@ -2,10 +2,10 @@
 
 @session_start();
 
-$pRoot = $_SESSION['pRoot'];
+$pRootC = $_SESSION['pRootC'];
 
-require_once $pRoot.'/libraries/ConnectionDB.php';
-require_once $pRoot.'/libraries/SessionVars.php';
+require_once $pRootC.'/libraries/ConnectionDB.php';
+require_once $pRootC.'/libraries/SessionVars.php';
 
 class MGetMenu{
     
@@ -20,9 +20,8 @@ class MGetMenu{
             $sql = 'select id, mod, fun, url from seguridad.get_menu('.$user.','.$op.','.$idApp.') as ("id" integer, "mod" varchar, "fun" varchar, "url" varchar);';
         else if($op == 2)
             $sql = 'select id, mod from seguridad.get_menu('.$user.','.$op.') as ("id" integer, "mod" varchar);';
-        
-        $con = new ConnectionDB();        
-        return $con->consult(ConnectionDB::$MNG_PG,$sql);
+                
+        return ConnectionDB::consult(new HostData(), $sql);
         
     }
     

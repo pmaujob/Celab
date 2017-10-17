@@ -1,10 +1,10 @@
 <?php
 @session_start();
 
-$pRoot = $_SESSION['pRoot'];
-$pRootHtml = $_SESSION['pRootHtml'];
+$pRootC = $_SESSION['pRootC'];
+$pRootHtmlC = $_SESSION['pRootHtmlC'];
 
-require_once $pRoot . '/Libraries/SessionVars.php';
+require_once $pRootC . '/Libraries/SessionVars.php';
 
 $sess = new SessionVars();
 
@@ -15,11 +15,11 @@ if ($sess->exist() && $sess->varExist('user')) {
         <head>
             <meta charset="UTF-8">
             <title>Scorpio</title>
-            <?php include_once $pRoot . '/Admin/Views/header.php'; ?>
+            <?php include_once $pRootC . '/Admin/Views/header.php'; ?>
         </head>
         <body>
 
-            <?php include_once $pRoot . '/Admin/Views/menu.php'; ?>
+            <?php include_once $pRootC . '/Admin/Views/menu.php'; ?>
 
         </body>
     </html>
@@ -27,6 +27,6 @@ if ($sess->exist() && $sess->varExist('user')) {
     <?php
 } else {
 
-    header("Location: $pRootHtml");
+    header("Location: $pRootHtmlC");
 }
 ?>

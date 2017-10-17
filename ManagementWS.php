@@ -19,9 +19,10 @@ switch ($opModel) {
         echo json_encode(MGetVinculationType::getTypes());
         break;
 
-    case MOD_SEARCH_DOCUMENT:
+    case MOD_SEARCH_DOCUMENT://Consultar si el documento existe
         $document = $_POST['document'];
-        echo MSearchDocument::documentExists($document);
+        $docType = $_POST['docType'];
+        echo MSearchDocument::documentExists($document,$docType);
         break;
 
     default:

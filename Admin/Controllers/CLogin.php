@@ -1,10 +1,11 @@
 <?php
+
 @session_start();
 
-$pRoot = $_SESSION['pRoot'];
+$pRootC = $_SESSION['pRootC'];
 
-require_once $pRoot.'/Admin/Models/MLogin.php';
-require_once $pRoot.'/Libraries/SessionVars.php';
+require_once $pRootC . '/Admin/Models/MLogin.php';
+require_once $pRootC . '/Libraries/SessionVars.php';
 
 class CLogin {
 
@@ -16,36 +17,33 @@ class CLogin {
     private $pass;
     private $ip;
     private $idApp;
-    
+
     public function setEmail($email) {
-        
+
         $this->email = $email;
-        $this->emailFilter = "'".$email."'";
-        
+        $this->emailFilter = "'" . $email . "'";
     }
 
     public function setPass($pass) {
 
-        $this->pass = "'".sha1($pass)."'";
-        
+        $this->pass = "'" . sha1($pass) . "'";
     }
-    
+
     public function setIp($ip) {
 
-        $this->ip = "'".$ip."'";
-        
+        $this->ip = "'" . $ip . "'";
     }
-    
+
     public function setIdApp($idApp) {
         $this->idApp = $idApp;
     }
-    
+
     private function getIdApp() {
         return $this->idApp;
     }
 
     public function logIn() {
-        
+
         $mLogin = new MLogin();
         $mLogin->logIn($this->emailFilter, $this->pass, $this->ip);
         $this->user = $mLogin->getUser();
@@ -53,11 +51,10 @@ class CLogin {
         $this->idLog = $mLogin->getIdLog();
 
         return $mLogin->getResponse();
-        
     }
-    
-    public function setSession(){
-        
+
+    public function setSession() {
+
         $sess = new SessionVars();
         $sess->init();
         $sess->setValue('user', $this->user);
@@ -65,7 +62,6 @@ class CLogin {
         $sess->setValue('email', $this->email);
         $sess->setValue('idLog', $this->idLog);
         $sess->setValue('idApp', $this->getIdApp());
-        
     }
 
 }
@@ -78,11 +74,9 @@ if ((isset($_POST['email']) && isset($_POST['pass']) && isset($_POST['idapp'])) 
     $login->setIp('192.168.1.111');
     $login->setIdApp($_POST['idapp']);
     $user = $login->logIn();
-    if($user=="Ok")
+    if ($user == "Ok")
         $login->setSession();
-    
-    echo $user;
- 
-}
 
+    echo $user;
+}
 ?>
