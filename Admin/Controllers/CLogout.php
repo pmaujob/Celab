@@ -2,11 +2,11 @@
 
 @session_start();
 
-$pRoot = $_SESSION['pRoot'];
-$pRootHtml = $_SESSION['pRootHtml'];
+$pRootC = $_SESSION['pRootC'];
+$pRootHtmlC = $_SESSION['pRootHtmlC'];
 
-require_once $pRoot . '/Admin/Models/MLogout.php';
-require_once $pRoot . '/libraries/SessionVars.php';
+require_once $pRootC . '/Admin/Models/MLogout.php';
+require_once $pRootC . '/libraries/SessionVars.php';
 
 class CLogout {
 
@@ -56,5 +56,5 @@ $logOut = new CLogout();
 $logOut->setIdLog();
 $logOut->logOut();
 
-header("Location: $pRootHtml/index.php");
+header("Location: $pRootHtmlC/index.php");
 ?>

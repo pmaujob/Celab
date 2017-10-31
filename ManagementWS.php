@@ -16,7 +16,7 @@ $opModel = $_POST['opModel'];
 switch ($opModel) {
 
     case MOD_VINCULATION_TYPE://Traer tipos vinculacion
-        echo json_encode(MGetVinculationType::getTypes());
+        echo json_encode(MGetVinculationType::getTypes()->fetchAll(PDO::FETCH_OBJ));
         break;
 
     case MOD_SEARCH_DOCUMENT://Consultar si el documento existe

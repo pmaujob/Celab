@@ -34,7 +34,7 @@ class ConnectionDB {
 
         self::closeConnection($pdo);
 
-        return $rt->fetchAll(PDO::FETCH_OBJ);
+        return $rt;
     }
 
     public static function afect($hostData, $sql) {

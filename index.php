@@ -74,7 +74,6 @@ if (!$sess->varExist('user')) {
     </html>
     <?php
 } else {
-
-    header("Location: $pRootHtmlC/Views/index.php");
+    header("Location: $pRootHtmlC/Admin/Views/index.php");
 }
 ?>

@@ -2,18 +2,17 @@
 
 @session_start();
 
-$pRoot = $_SESSION['pRoot'];
+$pRootC = $_SESSION['pRootC'];
 
-require_once $pRoot.'/libraries/ConnectionDB.php';
+require_once $pRootC.'/libraries/ConnectionDB.php';
 
 class MLogout {
     
     public static function logOut($idLog){
         
-        $sql = 'select from seguridad.logs_logout('.$idLog.');';
+        $consult = 'select from seguridad.logs_logout('.$idLog.');';
         
-        $con = new ConnectionDB();
-        $con->consult(ConnectionDB::$MNG_PG,$sql);
+        ConnectionDB::consult(new HostData(), $consult);
         
     }
     

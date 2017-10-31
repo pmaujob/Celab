@@ -7,8 +7,7 @@ $pRootHtmlC = $_SESSION['pRootHtmlC'];
 require_once $pRootC . '/Admin/Models/MGetMenu.php';
 require_once $pRootC . '/Libraries/SessionVars.php';
 
-$modules = MGetMenu::getMenu(2, null);
-$functions = MGetMenu::getMenu(1, 1);
+$modules = MGetMenu::getMenu(2, 1);
 
 $sess = new SessionVars();
 ?>
@@ -60,42 +59,48 @@ $sess = new SessionVars();
                 <a href="#!email"><span class="email white-text"><?php echo $sess->getValue('email'); ?></span></a>
             </div>
         </li>
-        <li class="no-padding">
-            <ul class="collapsible collapsible-accordion">
-                <li>
+        <?php
+        if (count($modules) > 0) {
+            foreach ($modules as $row) {
+                
+                if ($row[2] === '1') {
+                    $functions = MGetMenu::getMenu(1, 1, $row[0])->fetch(PDO::FETCH_OBJ);
+                    $link = $functions->url;
+                    $nameFunction = $functions->mod;
+                    ?>
+                    <li><a href="<?php echo $link; ?>"><?php echo $nameFunction; ?></a></li>
                     <?php
-                    if (count($modules) > 0) {
-                        foreach ($modules as $row) {
-                            ?>
-                            <a class="collapsible-header"><?php echo $row[1]; ?><i class="material-icons">arrow_drop_down</i></a>
-                            <div class="collapsible-body">
-                                <ul>
-                                    <?php
-                                    $functions = MGetMenu::getMenu(1, 1);
+                } else {
+                    ?>
 
-                                    foreach ($functions as $row2) {
-                                        if ($row[0] == $row2[0]) {
+                    <li class="no-padding">
+                        <ul class="collapsible collapsible-accordion">
+                            <li>
+                                <a class="collapsible-header"><?php echo $row[1]; ?><i class="material-icons right">arrow_drop_down</i></a>
+                                <div class="collapsible-body">
+                                    <ul>
+                                        <?php
+                                        $functions = MGetMenu::getMenu(1, 1, $row[0]);
+                                        foreach ($functions as $row2) {
                                             ?>
-
                                             <li><a onclick="location.href = '<?php echo 'http://' . $_SERVER['SERVER_NAME'] . $row2[3]; ?>'" href="<?php echo 'http://' . $_SERVER['SERVER_NAME'] . $row2[3]; ?>"><?php echo $row2[2]; ?></a></li>
-
                                             <?php
                                         }
-                                    }
-                                    ?>
+                                        ?>
+                                    </ul>
+                                </div>
+                            </li>
+                        </ul>
+                    </li>
 
-                                </ul>
-                            </div>
-                        </li>  
-                        <?php
-                    }
-                } else {
-
-                    echo "Este usuario no tiene acceso a ningun modulo";
+                    <?php
                 }
-                ?>
-            </ul>
-        </li>
+            }
+        } else {
+
+            echo "Este usuario no tiene acceso a ningun modulo";
+        }
+        ?>
     </ul>
 </div>
 

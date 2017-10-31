@@ -24,7 +24,7 @@ class MLogin {
 
         $sql = 'select cont from seguridad.login(' . $email . ',' . $pass . ') as ("cont" varchar);';
 
-        $res = ConnectionDB::consult($this->con, $sql);
+        $res = ConnectionDB::consult($this->con, $sql)->fetchAll(PDO::FETCH_OBJ);
         $response = "No";
 
         foreach ($res as $result) {
@@ -35,7 +35,7 @@ class MLogin {
 
             $sql = 'select id from seguridad.ing_logs_login(' . $ip . ',' . $email . ') as ("id" integer);';
 
-            $res = ConnectionDB::consult($this->con, $sql);
+            $res = ConnectionDB::consult($this->con, $sql)->fetchAll(PDO::FETCH_OBJ);
 
             foreach ($res as $result) {
                 $this->idLog = $result->id;
@@ -51,7 +51,7 @@ class MLogin {
 
         $sql = 'select usuario, id from seguridad.get_datos_usuario(' . $this->email . ') as ("usuario" varchar, "id" varchar);';
 
-        $res = ConnectionDB::consult($this->con, $sql);
+        $res = ConnectionDB::consult($this->con, $sql)->fetchAll(PDO::FETCH_OBJ);
 
         foreach ($res as $resultado) {
             $this->user = $resultado->usuario;

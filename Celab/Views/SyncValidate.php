@@ -1,8 +1,8 @@
 <?php
 @session_start();
 
-$pRoot = $_SESSION['pRoot'];
-$pRootHtml = $_SESSION['pRootHtml'];
+$pRootC = $_SESSION['pRootC'];
+$pRootHtmlC = $_SESSION['pRootHtmlC'];
 ?>
 
 <!DOCTYPE html>
@@ -10,12 +10,11 @@ $pRootHtml = $_SESSION['pRootHtml'];
     <head>
         <meta charset="UTF-8">
         <title>Consulta de Actividades</title>
-        <?php include_once $pRoot . '/Admin/Views/header.php'; ?>
-        <?php include_once $pRoot . '/MlBackups/Views/headerp.php'; ?>
+        <?php include_once $pRootC . '/Admin/Views/header.php'; ?>
         <script type="text/javascript" src="js/forms/SyncValidate.js"></script>
     </head>
     <body onload="onLoadBody();">
-        <?php include $pRoot . '/Admin/Views/menu.php'; ?>
+        <?php include $pRootC . '/Admin/Views/menu.php'; ?>
         <div class="general-container">
             <form id='frmConsultSync' name='frmConsultSync' enctype="multipart/form-data">
                 <div class="container-fluid">
@@ -29,7 +28,7 @@ $pRootHtml = $_SESSION['pRootHtml'];
                             <div class="col s12 m12 l12">
                                 <div class="row">
                                     <a class="waves-effect waves-light" href="#!" onclick="openModal();">
-                                        <img id="iconSearch" src="<?php echo $pRootHtml."/Publics/images/view.png"; ?>" class="icon-search">
+                                        <img id="iconSearch" src="<?php echo $pRootHtmlC."/Publics/images/view.png"; ?>" class="icon-search">
                                     </a>
                                 </div>
                             </div>

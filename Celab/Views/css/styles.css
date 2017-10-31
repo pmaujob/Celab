@@ -14,14 +14,13 @@
     margin-left: 50%;
     transform: translateX(-50%);
 }
-
 .general-container{
     margin-top: 66px;
 }
 
 .icon-search{
-    width: 70%; 
-    height: 70%;
+    width: 25%; 
+    height: 25%;
     transition: width 0.5s, height 0.5s;
     -webkit-transition: width 0.5s, height 0.5s;
     -o-transition: width 0.5s, height 0.5s;
@@ -82,6 +81,10 @@ i.active {
 
 .ver-mas-button {
     color: #3991FE;
+}
+
+.picker__date-display {
+  background-color:blue;
 }
 
 

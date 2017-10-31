@@ -14,10 +14,10 @@ class MGetVinculationType {
                 . 'des '
                 . 'from get_tipo_vinculacion() '
                 . 'as ("id" smallint, "des" varchar);';
-        
+
         return ConnectionDB::consult(new HostData(), $sql);
-        
     }
+
 }
 
 ?>

@@ -29,9 +29,20 @@
     -moz-transition: width 0.5s, height 0.5s;
 }
 
+.icon-contract{    
+    width: 15%; 
+    height: 15%;
+}
+
 .lbl-style{
     color: #666F7B;    
     transition: width 0.5s, height 0.5s;
+}
+
+.titles{
+    color:#3991FE;
+    font-size:20px;
+    margin-bottom: 5px;
 }
 
 /* Logo cliente */

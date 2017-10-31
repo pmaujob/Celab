@@ -14,7 +14,7 @@ if ($sess->exist() && $sess->varExist('user')) {
     <html lang="en">
         <head>
             <meta charset="UTF-8">
-            <title>Scorpio</title>
+            <title>Celab</title>
             <?php include_once $pRootC . '/Admin/Views/header.php'; ?>
         </head>
         <body>
@@ -26,7 +26,6 @@ if ($sess->exist() && $sess->varExist('user')) {
 
     <?php
 } else {
-
     header("Location: $pRootHtmlC");
 }
 ?>
