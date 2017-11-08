@@ -12,18 +12,6 @@ $modules = MGetMenu::getMenu(2, 1);
 $sess = new SessionVars();
 ?>
 
-<div class="fixed-action-btn">
-    <a class="btn-floating btn-large" style="">
-        <i class="large material-icons">apps</i>
-    </a>
-    <ul>
-        <li><a class="btn-floating red"><i class="material-icons">insert_chart</i></a></li>
-        <li><a class="btn-floating yellow darken-1"><i class="material-icons">format_quote</i></a></li>
-        <li><a class="btn-floating green"><i class="material-icons">publish</i></a></li>
-        <li><a class="btn-floating blue"><i class="material-icons">attach_file</i></a></li>
-    </ul>
-</div>
-
 <div class="row">
     <div class="head-usuario col s12 m12 l12">
         <div class="col s6 m1 l1">
@@ -62,7 +50,7 @@ $sess = new SessionVars();
         <?php
         if (count($modules) > 0) {
             foreach ($modules as $row) {
-                
+
                 if ($row[2] === '1') {
                     $functions = MGetMenu::getMenu(1, 1, $row[0])->fetch(PDO::FETCH_OBJ);
                     $link = $functions->url;
