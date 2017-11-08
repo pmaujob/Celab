@@ -87,7 +87,7 @@ $pRootHtmlC = $_SESSION['pRootHtmlC'];
                     </div>  
                 </div>
 
-                <div class="row hideControl">
+                <div id="divContracts" class="row hideControl">
                     <div class="col s1 m2 l2">
                     </div>
 
@@ -111,12 +111,12 @@ $pRootHtmlC = $_SESSION['pRootHtmlC'];
                     </div>
                 </div>
 
-                <div class="row hideControl">
+                <div id="divButtonRegist" class="row hideControl">
                     <div class="col s3 m5 l5">
                     </div>
 
                     <div class="col s6 m2 l2">
-                        <button class="btn waves-effect waves-light" onclick="saveInfo();">Registrar
+                        <button class="btn waves-effect waves-light" onclick="saveContractInfo();">Registrar
                             <i class="material-icons right">send</i>
                         </button>
                     </div>

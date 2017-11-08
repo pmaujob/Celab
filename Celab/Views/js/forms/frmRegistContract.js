@@ -1,6 +1,9 @@
 contRegex = /^\d{4,4}-\d{2,2}$/;
 valueRegex = /^\d{0,}\.{0,1}\d{1,}$/;
 contractArray = new Array();
+contTr = 0;
+isEditting = false;
+currentRowId = 0;
 
 function onLoadRegistContract() {
 
@@ -82,6 +85,8 @@ function searchContractor(event) {
         return;
     }
 
+    document.getElementById("tblContractor").style.display = "";
+
     jQuery.ajax({
         type: 'POST',
         url: 'http://localhost/Celab/Celab/Views/dinamicForms/frmSearchContractor.php',
@@ -113,6 +118,7 @@ function selectContractor(name, doc, email) {
 }
 
 function openModal() {
+    document.getElementById('modale').innerHTML = "Agregar Contrato";
     $('#contractModal').modal('open');
 }
 
@@ -130,11 +136,34 @@ function validateChars(event) {
     }
 }
 
-function remove() {
+function remove(selectedRowId) {
+
+    var selectedRow = document.getElementById(selectedRowId);
+    document.getElementById('tableContracts').removeChild(selectedRow);
+
+    var index = contractArray.indexOf(selectedRowId);
+    contractArray.splice(index + 1, 1);
+    contractArray.splice(index, 1);
 
 }
 
-function edit() {
+function edit(selectedRowId) {
+    
+    document.getElementById('modale').innerHTML = "Modificar Contrato";
+        
+    isEditting = true;
+    currentRowId = selectedRowId;
+    var selectedData = contractArray[contractArray.indexOf("trContract" + selectedRowId) + 1];
+
+    $('#listContrato').val(selectedData[0]);
+    $("#listContrato").material_select('update');
+    document.getElementById('contId').value = selectedData[1];
+    $('#idDateSus').pickadate('picker').set('select', selectedData[2], {format: 'yyyy-mm-dd'});
+    $('#idDateFin').pickadate('picker').set('select', selectedData[3], {format: 'yyyy-mm-dd'});
+    document.getElementById('valueId').value = selectedData[4];
+    document.getElementById('objectId').value = selectedData[5];
+
+    $('#contractModal').modal('open');
 
 }
 
@@ -202,54 +231,17 @@ function validateContractData() {
 
     var contractData = new Array();
     contractData.push(listContrato.value);
+    contractData.push(contId.value);
     contractData.push(susDate);
     contractData.push(finDate);
     contractData.push(valueId.value);
     contractData.push(objectId.value);
-    contractData.push(contId.value);
 
-    contractArray.push(contractData);
-
-    var trContract = document.createElement('tr');
-    trContract.id = "trContract" + contractArray.length;
-
-    var tdNo = document.createElement('td');
-    tdNo.innerHTML = "" + contractArray.length;
-    trContract.appendChild(tdNo);
-
-    var tdContractType = document.createElement('td');
-    tdContractType.innerHTML = $("#typeContractItem" + listContrato.value).html();
-    trContract.appendChild(tdContractType);
-
-    var tdContractNum = document.createElement('td');
-    tdContractNum.innerHTML = contId.value;
-    trContract.appendChild(tdContractNum);
-
-    var tdEdit = document.createElement('td');
-    var aEditContract = document.createElement('a');
-    aEditContract.class = "waves-effect waves-light";
-    aEditContract.href = "#!";
-    aEditContract.onclick = "edit(" + ");";
-    var aEditIcon = document.createElement('img');
-    aEditIcon.src = "../../Publics/images/ic_document_edit.png";
-    aEditIcon.style = "width: 40%; height: 40%;";
-    aEditContract.appendChild(aEditIcon);
-    tdEdit.appendChild(aEditContract);
-    trContract.appendChild(tdEdit);
-
-    var tdRemove = document.createElement('td');
-    var aRemoveContract = document.createElement('a');
-    aRemoveContract.class = "waves-effect waves-light";
-    aRemoveContract.href = "#!";
-    aRemoveContract.onclick = "remove(this);";
-    var aRemoveIcon = document.createElement('img');
-    aRemoveIcon.src = "../../Publics/images/ic_document_remove.png";
-    aRemoveIcon.style = "width: 40%; height: 40%;";
-    aRemoveContract.appendChild(aRemoveIcon);
-    tdRemove.appendChild(aRemoveContract);
-    trContract.appendChild(tdRemove);
-
-    document.getElementById('tableContracts').appendChild(trContract);
+    if (isEditting) {        
+        editContract(contractData);        
+    } else {
+        addContract(contractData);
+    }
 
     $('#listContrato').val('0');
     $('#listContrato').material_select();
@@ -260,4 +252,110 @@ function validateContractData() {
     objectId.value = "";
 
     closeModal();
+    isEditting = false;
+
+}
+
+function addContract(contractData) {
+
+    contTr++;
+    var trId = "trContract" + contTr;
+    contractArray.push(trId);
+    contractArray.push(contractData);
+
+    var trContract = document.createElement('tr');
+    trContract.id = trId;
+
+    var tdNo = document.createElement('td');
+    tdNo.innerHTML = "" + contractArray.length;
+    trContract.appendChild(tdNo);
+
+    var tdContractType = document.createElement('td');
+    tdContractType.id = "tdContractType" + contTr;
+    tdContractType.innerHTML = $("#typeContractItem" + document.getElementById('listContrato').value).html();
+    trContract.appendChild(tdContractType);
+
+    var tdContractNum = document.createElement('td');
+    tdContractNum.id = "tdContractNum" + contTr;
+    tdContractNum.innerHTML = document.getElementById('contId').value;
+    trContract.appendChild(tdContractNum);
+
+    var tdEdit = document.createElement('td');
+    var aEditContract = document.createElement('a');
+    aEditContract.className = "waves-effect waves-light";
+    aEditContract.href = "#!";
+
+    if (aEditContract.addEventListener) {  // all browsers except IE before version 9
+        aEditContract.addEventListener("click", function () {
+            edit(contTr);
+        }, false);
+    } else {
+        if (aEditContract.attachEvent) {   // IE before version 9
+            aEditContract.attachEvent("click", function () {
+                edit(contTr);
+            });
+        }
+    }
+
+    var aEditIcon = document.createElement('img');
+    aEditIcon.src = "../../Publics/images/ic_document_edit.png";
+    aEditIcon.style = "width: 40%; height: 40%;";
+    aEditContract.appendChild(aEditIcon);
+    tdEdit.appendChild(aEditContract);
+    trContract.appendChild(tdEdit);
+
+    var tdRemove = document.createElement('td');
+
+    var aRemoveContract = document.createElement('a');
+    aRemoveContract.className = "waves-effect waves-light";
+    aRemoveContract.href = "#!";
+
+    if (aRemoveContract.addEventListener) {  // all browsers except IE before version 9
+        aRemoveContract.addEventListener("click", function () {
+            remove(trId);
+        }, false);
+    } else {
+        if (aRemoveContract.attachEvent) {   // IE before version 9
+            aRemoveContract.attachEvent("click", function () {
+                remove(trId);
+            });
+        }
+    }
+
+    var aRemoveIcon = document.createElement('img');
+    aRemoveIcon.src = "../../Publics/images/ic_document_remove.png";
+    aRemoveIcon.style = "width: 40%; height: 40%;";
+    aRemoveContract.appendChild(aRemoveIcon);
+    tdRemove.appendChild(aRemoveContract);
+    trContract.appendChild(tdRemove);
+
+    document.getElementById('tableContracts').appendChild(trContract);
+    document.getElementById('divContracts').classList.remove("hideControl");
+    document.getElementById('divButtonRegist').classList.remove("hideControl");
+
+}
+
+function editContract(contractData) {
+        
+    contractArray[contractArray.indexOf("trContract" + currentRowId) + 1] = contractData;
+
+    var tdContractType = document.getElementById('tdContractType' + currentRowId);
+    tdContractType.innerHTML = $("#typeContractItem" + document.getElementById('listContrato').value).html();
+
+    var tdContractNum = document.getElementById('tdContractNum' + currentRowId);
+    tdContractNum.innerHTML = document.getElementById('contId').value;
+
+}
+
+function saveContractInfo() {
+
+
+    if (contractArray.length == 0) {
+        alert("No hay ningún contrato ingresado aun.");
+        return;
+    }
+
+
+
+
 }
