@@ -132,5 +132,15 @@ i.active {
     color: #3991FE;
 }
 
+/* logo corazon del mundo */
+
+.logo-heart{
+    margin-top: 160px;
+    opacity: 0;
+    transition: opacity 3s;
+    -o-transition: opacity 3s;
+    -webkit-transition: opacity 3s;
+}
+
 
 

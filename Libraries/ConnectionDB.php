@@ -1,6 +1,10 @@
 <?php
 
-require_once '/HostData.php';
+@session_start();
+
+$pRootC = $_SESSION['pRootC'];
+
+require_once $pRootC . '/Libraries/HostData.php';
 
 class ConnectionDB {
 
