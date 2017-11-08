@@ -39,6 +39,14 @@
     transition: width 0.5s, height 0.5s;
 }
 
+.optionsbtn {
+    position: relative;
+    margin-left: 4rem;
+}
+.hideControl{
+    display:none;
+}
+
 .titles{
     color:#3991FE;
     font-size:20px;

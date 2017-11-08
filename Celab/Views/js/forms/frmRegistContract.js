@@ -1,10 +1,11 @@
-emailRegex = /^[-\w.%+]{1,64}@(?:[A-Z0-9-]{1,63}\.){1,125}[A-Z]{2,63}$/i;
 contRegex = /^\d{4,4}-\d{2,2}$/;
 valueRegex = /^\d{0,}\.{0,1}\d{1,}$/;
+contractArray = new Array();
 
-function onLoadBodyR() {
+function onLoadRegistContract() {
 
     $(document).ready(function () {
+        $('select').material_select();
         $('.modal').modal();
         $(".onlyNumbers").keydown(function (e) {
             // Allow: backspace, delete, tab, escape, enter and .
@@ -21,10 +22,6 @@ function onLoadBodyR() {
                         e.preventDefault();
                     }
                 });
-    });
-
-    $(document).ready(function () {
-        $('select').material_select();
     });
 
     $('.datepicker').pickadate({
@@ -49,32 +46,6 @@ function onLoadBodyR() {
         type: 'POST',
         url: 'http://localhost/Celab/Celab/Controllers/GetContIdentType.php',
         async: true,
-        data: {op: 1},
-        timeout: 0,
-        success: function (respuesta) {
-
-            var vitypes = JSON.parse(respuesta);
-            for (var i = 0; i < vitypes.length; i++) {
-
-                var vitype = vitypes[i];
-                var option = document.createElement('option');
-                option.value = vitype.id + "|" + vitype.dv;
-                option.innerHTML = vitype.des;
-
-                $('#listTipo').append(option);
-            }
-            $("#listTipo").material_select('update');
-
-        }, error: function () {
-            alert('Unexpected Error');
-            return;
-        }
-    });
-
-    jQuery.ajax({
-        type: 'POST',
-        url: 'http://localhost/Celab/Celab/Controllers/GetContIdentType.php',
-        async: true,
         data: {op: 2},
         timeout: 0,
         success: function (respuesta) {
@@ -84,6 +55,7 @@ function onLoadBodyR() {
 
                 var vitype = vitypes[i];
                 var option = document.createElement('option');
+                option.id = "typeContractItem" + vitype.id;
                 option.value = vitype.id;
                 option.innerHTML = vitype.des;
 
@@ -98,17 +70,54 @@ function onLoadBodyR() {
 
 }
 
+function searchContractor(event) {
+
+    if (searchContractor != null && event.keyCode != 13) {
+        return;
+    }
+
+    var inputContractor = document.getElementById('inputContractor');
+    if (inputContractor.value.toString().trim().length == 0) {
+        alert('Debe digitar un nombre o número de documento para realizar la búsqueda.');
+        return;
+    }
+
+    jQuery.ajax({
+        type: 'POST',
+        url: 'http://localhost/Celab/Celab/Views/dinamicForms/frmSearchContractor.php',
+        async: true,
+        data: {op: 1, fill: inputContractor.value},
+        timeout: 0,
+        success: function (respuesta) {
+
+            document.getElementById('tblContractor').innerHTML = respuesta;
+
+        }, error: function () {
+            alert('Unexpected Error');
+        }
+    });
+
+}
+
+function selectContractor(name, doc, email) {
+
+    document.getElementById("tblContractorInfo").classList.remove("hideControl");
+    document.getElementById("btnAddContract").classList.remove("hideControl");
+
+    document.getElementById("tdName").innerHTML = name;
+    document.getElementById("tdDoc").innerHTML = doc;
+    document.getElementById("tdEmail").innerHTML = email;
+
+    document.getElementById("tblContractor").style.display = "none";
+
+}
+
 function openModal() {
     $('#contractModal').modal('open');
 }
 
 function closeModal() {
     $('#contractModal').modal('close');
-}
-
-function validateDV(select) {
-    var opValue = select.value.toString().split('|')[1];
-    document.getElementById('divDv').style.display = opValue == 1 ? "" : "none";
 }
 
 function validateChars(event) {
@@ -119,6 +128,14 @@ function validateChars(event) {
     } else if (event.keyCode != 8 && contId.value.toString().length == 4) {
         contId.value += "-";
     }
+}
+
+function remove() {
+
+}
+
+function edit() {
+
 }
 
 function validateContractData() {
@@ -137,10 +154,10 @@ function validateContractData() {
     var finYear = $('#idDateFin').pickadate('picker').get('highlight', 'yyyy');
     var finMonth = $('#idDateFin').pickadate('picker').get('highlight', 'mm');
     var finDay = $('#idDateFin').pickadate('picker').get('highlight', 'dd');
-        
+
     if (listContrato.value == 0) {
         alert('Debe escoger un tipo de contrato.');
-        listTipo.focus();
+        listContrato.focus();
         return;
     }
 
@@ -183,126 +200,64 @@ function validateContractData() {
         return;
     }
 
+    var contractData = new Array();
+    contractData.push(listContrato.value);
+    contractData.push(susDate);
+    contractData.push(finDate);
+    contractData.push(valueId.value);
+    contractData.push(objectId.value);
+    contractData.push(contId.value);
+
+    contractArray.push(contractData);
+
+    var trContract = document.createElement('tr');
+    trContract.id = "trContract" + contractArray.length;
+
+    var tdNo = document.createElement('td');
+    tdNo.innerHTML = "" + contractArray.length;
+    trContract.appendChild(tdNo);
+
+    var tdContractType = document.createElement('td');
+    tdContractType.innerHTML = $("#typeContractItem" + listContrato.value).html();
+    trContract.appendChild(tdContractType);
+
+    var tdContractNum = document.createElement('td');
+    tdContractNum.innerHTML = contId.value;
+    trContract.appendChild(tdContractNum);
+
+    var tdEdit = document.createElement('td');
+    var aEditContract = document.createElement('a');
+    aEditContract.class = "waves-effect waves-light";
+    aEditContract.href = "#!";
+    aEditContract.onclick = "edit(" + ");";
+    var aEditIcon = document.createElement('img');
+    aEditIcon.src = "../../Publics/images/ic_document_edit.png";
+    aEditIcon.style = "width: 40%; height: 40%;";
+    aEditContract.appendChild(aEditIcon);
+    tdEdit.appendChild(aEditContract);
+    trContract.appendChild(tdEdit);
+
+    var tdRemove = document.createElement('td');
+    var aRemoveContract = document.createElement('a');
+    aRemoveContract.class = "waves-effect waves-light";
+    aRemoveContract.href = "#!";
+    aRemoveContract.onclick = "remove(this);";
+    var aRemoveIcon = document.createElement('img');
+    aRemoveIcon.src = "../../Publics/images/ic_document_remove.png";
+    aRemoveIcon.style = "width: 40%; height: 40%;";
+    aRemoveContract.appendChild(aRemoveIcon);
+    tdRemove.appendChild(aRemoveContract);
+    trContract.appendChild(tdRemove);
+
+    document.getElementById('tableContracts').appendChild(trContract);
+
+    $('#listContrato').val('0');
+    $('#listContrato').material_select();
+    contId.value = "";
+    idDateSus.value = "";
+    idDateFin.value = "";
+    valueId.value = "";
+    objectId.value = "";
+
+    closeModal();
 }
-
-function saveInfo() {
-
-    var funFirstName = document.getElementById('funFirstName');
-    var funLastName = document.getElementById('funLastName');
-    var listTipo = document.getElementById('listTipo');
-    var funId = document.getElementById('funId');
-    var dv = document.getElementById('dv');
-    var emailId = document.getElementById('emailId');
-    var listContrato = document.getElementById('listContrato');
-    var contId = document.getElementById('contId');
-    var idDateSus = document.getElementById('idDateSus');
-    var idDateFin = document.getElementById('idDateFin');
-    var valueId = document.getElementById('valueId');
-    var objectId = document.getElementById('objectId');
-
-    var susYear = $('#idDateSus').pickadate('picker').get('highlight', 'yyyy');
-    var susMonth = $('#idDateSus').pickadate('picker').get('highlight', 'mm');
-    var susDay = $('#idDateSus').pickadate('picker').get('highlight', 'dd');
-
-    var finYear = $('#idDateFin').pickadate('picker').get('highlight', 'yyyy');
-    var finMonth = $('#idDateFin').pickadate('picker').get('highlight', 'mm');
-    var finDay = $('#idDateFin').pickadate('picker').get('highlight', 'dd');
-
-
-    if (funFirstName.value.toString().trim().length == 0) {
-        alert('Debe ingresar su nombre.');
-        funFirstName.focus();
-        return;
-    }
-
-    if (funLastName.value.toString().trim().length == 0) {
-        alert('Debe ingresar su apellido.');
-        funLastName.focus();
-        return;
-    }
-
-    if (listTipo.value == 0) {
-        alert('Debe escoger un tipo de documento.');
-        listTipo.focus();
-        return;
-    }
-
-    if (funId.value.toString().trim().length == 0) {
-        alert('Debe ingresar su documento de identidad.');
-        funId.focus();
-        return;
-    }
-
-    if (document.getElementById('divDv').style.display != "none" && dv.value.toString().trim().length == 0) {
-        alert('Debe ingresar el dígito de verificación');
-        dv.focus();
-        return;
-    }
-
-    //Se muestra un texto a modo de ejemplo, luego va a ser un icono
-    if (!emailRegex.test(emailId.value)) {
-        alert('El email ingresado NO es válido.');
-        emailId.focus();
-        return;
-    }
-    
-    var contractorData = new Array();
-    contractorData.push(funFirstName.value);
-    contractorData.push(funLastName.value);
-    contractorData.push(listTipo.value.toString().split('|')[0]);
-    contractorData.push(funId.value);
-    contractorData.push(dv.value);
-    contractorData.push(emailId.value);
-
-    for (var i = 0; i < max; i++) {//hasta numero de contratos agregados
-        
-    }
-
-    var susDate = susYear + "-" + susMonth + "-" + susDay;
-    var finDate = finYear + "-" + finMonth + "-" + finDay;
-
-    contractorData.push(listContrato.value);
-    contractorData.push(contId.value);
-    contractorData.push(susDate);
-    contractorData.push(finDate);
-    contractorData.push(valueId.value);
-    contractorData.push(objectId.value);
-
-    jQuery.ajax({
-        type: 'POST',
-        url: 'http://localhost/Celab/Celab/Controllers/CRegistContractor.php',
-        async: true,
-        data: {contractorData: contractorData},
-        timeout: 0,
-        success: function (respuesta) {
-
-
-            switch (respuesta.toString().trim()) {
-
-                case "1":
-                    alert("Los datos fueron registrados satisfactoriamente.");
-                    location.href = "";//llevar a generar el certificado
-                    break;
-
-                case "- 1":
-                    alert("El documento de identidad ingresado ya existe.");
-                    funId.focus();
-                    break;
-
-                default:
-                    console.log("ERROR: " + respuesta);
-                    alert("No se pudo realizar el registro de datos, por favor vuelva a intentarlo.");
-                    break;
-
-            }
-
-
-        }, error: function () {
-            alert('Unexpected Error');
-            return;
-        }
-    });
-
-
-}
-

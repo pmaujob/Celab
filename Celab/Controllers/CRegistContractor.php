@@ -15,14 +15,6 @@ class RegistContractor {
     private $documento;
     private $email;
     private $dv;
-    //Datos Contrato
-    private $idContrato;
-    private $idConTipo;
-    private $numContrato;
-    private $fechaSuscripcion;
-    private $fechaTerminacion;
-    private $valor;
-    private $objeto;
 
     function getIdContratista() {
         return $this->idContratista;
@@ -143,14 +135,8 @@ class RegistContractor {
                 $this->getIdDocTipo(), 
                 "'" . $this->getDocumento() . "'", 
                 $this->getDv(), 
-                "'" . $this->getEmail() . "'",
-                $this->getIdConTipo() ,
-                "'" . $this->getNumContrato() . "'",
-                "'" . $this->getFechaSuscripcion() . "'",
-                "'" . $this->getFechaTerminacion() . "'",
-                $this->getValor(),
-                "'" . $this->getObjeto() . "'")->fetch(PDO::FETCH_OBJ);
-        return $result->id;
+                "'" . $this->getEmail() . "'")->fetch(PDO::FETCH_OBJ)->id;
+        return $result;
     }
 
 }
@@ -164,13 +150,6 @@ $registContractor->setIdDocTipo($contractorData[2]);
 $registContractor->setDocumento($contractorData[3]);
 $registContractor->setDv($contractorData[4]);
 $registContractor->setEmail($contractorData[5]);
-
-$registContractor->setIdConTipo($contractorData[6]);
-$registContractor->setNumContrato($contractorData[7]);
-$registContractor->setFechaSuscripcion($contractorData[8]);
-$registContractor->setFechaTerminacion($contractorData[9]);
-$registContractor->setValor($contractorData[10]);
-$registContractor->setObjeto($contractorData[11]);
 
 echo $registContractor->regist();
 ?>

@@ -12,10 +12,10 @@ $pRootHtmlC = $_SESSION['pRootHtmlC'];
         <title>Registrar Contratista</title>
         <?php include_once $pRootC . '/Admin/Views/header.php'; ?>
 
-        <script type="text/javascript" src="js/forms/RegistUser.js"></script>        
+        <script type="text/javascript" src="js/forms/frmRegistContractor.js"></script>        
     </head>
 
-    <body onload="onLoadBodyR();">
+    <body onload="onLoadRegistContractor();">
         <?php include $pRootC . '/Admin/Views/menu.php'; ?>
         <article>
             <section>
@@ -73,101 +73,6 @@ $pRootHtmlC = $_SESSION['pRootHtmlC'];
                     </div>                        
                 </div>
 
-                <div class="row">
-                    <div class="col s12 m12 l12 center-align">
-                        <a class="waves-effect waves-light" href="#!" onclick="openModal();">
-                            <img id="iconContract" src="<?php echo "../../Publics/images/ic_document.png"; ?>" class="icon-contract">
-                        </a>
-                    </div>
-                </div>
-
-                <div id="contractModal" class="modal modal-fixed-footer">
-                    <div class="modal-content">
-                        <h1 class="titles">Datos del Contrato</h1>                        
-                        <p>Ingrese los datos del contrato.</p>
-
-                        <div class="row">
-                            <div class="col s1 m2 l2">
-                            </div>
-
-                            <div class="col s10 m8 l8">
-                                <select id="listContrato">
-                                    <option value="0" disabled selected>Tipo de Contrato</option>
-                                </select>
-                            </div>
-
-                            <div class="col s1 m2 l2">
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col s1 m2 l2">
-                            </div>
-
-                            <div class="input-field col s10 m8 l8">
-                                <input id="contId" type="text" class="onlyNumbers validate" maxlength="7" placeholder="####-##" autocomplete="off" onkeypress="validateChars(event);">
-                                <label for="contId">No. de Contrato</label>
-                            </div>
-
-                            <div class="col s1 m2 l2">
-                            </div>
-                        </div>                    
-
-                        <div class="row">
-                            <div class="col s1 m2 l2">
-                            </div>
-
-                            <div class="col s5 m4 l4">
-                                <label>Fecha de Suscripción</label>
-                                <input id="idDateSus" type="text" class="datepicker">
-                            </div>  
-
-                            <div class=" col s5 m4 l4">                            
-                                <label>Fecha de Terminación</label>
-                                <input id="idDateFin" type="text" class="datepicker">
-                            </div> 
-
-                            <div class="col s1 m2 l2">
-                            </div>
-                        </div>     
-
-                        <div class="row">
-                            <div class="col s1 m2 l2">
-                            </div>
-
-                            <div class="input-field col s10 m8 l8">
-                                <input id="valueId" type="text" class="onlyNumbers validate">
-                                <label for="valueId">Valor</label>
-                            </div>
-
-                            <div class="col s1 m2 l2">
-                            </div>
-                        </div>   
-
-                        <div class="row">
-                            <div class="col s1 m2 l2">
-                            </div>
-
-                            <div class="input-field col s10 m8 l8">
-                                <input id="objectId" type="text" class="validate">
-                                <label for="objectId">Objeto</label>
-                            </div>
-
-                            <div class="col s1 m2 l2">
-                            </div>
-                        </div>
-
-                    </div>                    
-                    <div class="modal-footer">                                                      
-                        <a id="modale" href="#!" class="modal-action waves-effect waves-green btn-flat " onclick="validateContractData();">Agregar Contrato</a>
-                        <a id="modalg" href="#!" class="modal-action waves-effect waves-green btn-flat " onclick="">Cerrar</a>
-                    </div>
-                </div>
-
-                <div class="row">
-                    
-                </div>
-                
                 <div class="row">
                     <div class="col s3 m5 l5">
                     </div>
