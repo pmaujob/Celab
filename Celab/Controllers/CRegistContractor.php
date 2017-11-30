@@ -138,7 +138,6 @@ class RegistContractor {
                 "'" . $this->getEmail() . "'")->fetch(PDO::FETCH_OBJ)->id;
         return $result;
     }
-
 }
 
 $contractorData = array();

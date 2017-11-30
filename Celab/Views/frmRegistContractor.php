@@ -78,7 +78,7 @@ $pRootHtmlC = $_SESSION['pRootHtmlC'];
                     </div>
 
                     <div class="col s6 m2 l2">
-                        <button class="btn waves-effect waves-light" onclick="saveInfo();">Registrar
+                        <button class="btn waves-effect waves-light light-blue blueb" onclick="saveInfo();">Registrar
                             <i class="material-icons right">send</i>
                         </button>
                     </div>

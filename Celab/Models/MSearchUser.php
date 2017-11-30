@@ -12,12 +12,11 @@ class MSearchUser {
 
         $consult = 'select id,'//0
                 . 'nom,'//1
-                . 'idtip,'//2
-                . 'doc,'//3
-                . 'email,'//4
-                . 'dv '//5
-                . 'from get_contratista(\'' . $fill . '\') as ("id" integer, "nom" varchar, "idtip" integer, "doc" varchar, "email" varchar, "dv" integer)';
-    
+                . 'doc,'//2
+                . 'email,'//3
+                . 'bd '//4
+                . 'from get_contratista(\'' . strtolower($fill) . '\') as ("id" integer, "nom" varchar, "doc" varchar, "email" varchar, "bd" varchar)';
+       
         return ConnectionDB::consult(new HostData(), $consult);
         
     }

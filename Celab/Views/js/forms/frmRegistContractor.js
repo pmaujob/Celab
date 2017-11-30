@@ -80,7 +80,7 @@ function saveInfo() {
 
     //Se muestra un texto a modo de ejemplo, luego va a ser un icono
     if (!emailRegex.test(emailId.value)) {
-        alert('El email ingresado NO es válido.');
+        alert('El email NO es válido.');
         emailId.focus();
         return;
     }
@@ -108,7 +108,7 @@ function saveInfo() {
                     location.href = "";//llevar a generar el certificado
                     break;
 
-                case "- 1":
+                case "-1":
                     alert("El documento de identidad ingresado ya existe.");
                     funId.focus();
                     break;

@@ -15,8 +15,15 @@ class MRegistContractorData {
                 . $documento . ','
                 . ($dv == "" ? "NULL" : $dv) . ','
                 . $email . ') as ("id" integer);';
- 
+
         return ConnectionDB::consult(new HostData(), $consult);
+    }
+
+    public static function registContracts($idContractor, $bdContractor, $contractData, $emailContractor) {
+
+        $consult = "select from ins_contract($idContractor, '$bdContractor', $contractData, '$emailContractor');";
+        
+        return ConnectionDB::afect(new HostData(), $consult);
     }
 
 }

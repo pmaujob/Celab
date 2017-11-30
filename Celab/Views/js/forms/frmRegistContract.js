@@ -1,15 +1,30 @@
 contRegex = /^\d{4,4}-\d{2,2}$/;
 valueRegex = /^\d{0,}\.{0,1}\d{1,}$/;
+emailRegex = /^[-\w.%+]{1,64}@(?:[A-Z0-9-]{1,63}\.){1,125}[A-Z]{2,63}$/i;
 contractArray = new Array();
+additionArray = new Array();
 contTr = 0;
+contAdds = 0;
 isEditting = false;
 currentRowId = 0;
+idContractor = 0;
+bdContractor = '';
 
 function onLoadRegistContract() {
 
     $(document).ready(function () {
         $('select').material_select();
-        $('.modal').modal();
+        $('.modal').modal({
+            complete: function () {
+
+                if (isEditting) {
+                    clearModal();
+                    isEditting = false;
+                    additionArray = new Array();
+                }
+
+            }
+        });
         $(".onlyNumbers").keydown(function (e) {
             // Allow: backspace, delete, tab, escape, enter and .
             if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 110, 190]) !== -1 ||
@@ -70,12 +85,24 @@ function onLoadRegistContract() {
             alert('Unexpected Error');
         }
     });
+}
+
+function acceptNewContractor() {
+
+    getContractorData();
+    contractArray = new Array();
+    additionArray = new Array();
+    document.getElementById('divContracts').className += " hideControl";
+    document.getElementById("tblContractorInfo").className += " hideControl";
+    document.getElementById('divButtonRegist').className += " hideControl";
+
+    $("#infoModal").modal('close');
 
 }
 
 function searchContractor(event) {
 
-    if (searchContractor != null && event.keyCode != 13) {
+    if (event != null && event.keyCode != 13) {
         return;
     }
 
@@ -85,7 +112,21 @@ function searchContractor(event) {
         return;
     }
 
+    if (contractArray.length > 0) {
+        $("#infoModal").modal("open");
+    } else {
+        getContractorData();
+    }
+
+}
+
+function getContractorData() {
+
+    var inputContractor = document.getElementById('inputContractor');
+
     document.getElementById("tblContractor").style.display = "";
+    document.getElementById("tableContracts").innerHTML = "";
+    document.getElementById('divPreloader').classList.remove("hideControl");
 
     jQuery.ajax({
         type: 'POST',
@@ -96,23 +137,29 @@ function searchContractor(event) {
         success: function (respuesta) {
 
             document.getElementById('tblContractor').innerHTML = respuesta;
+            document.getElementById('divPreloader').className += " hideControl";
 
         }, error: function () {
             alert('Unexpected Error');
+            document.getElementById('divPreloader').className += " hideControl";
         }
     });
 
 }
 
-function selectContractor(name, doc, email) {
+function selectContractor(idCon, name, doc, email, bd) {
 
+    idContractor = idCon != -1 ? idCon : doc;
+    bdContractor = bd;
     document.getElementById("tblContractorInfo").classList.remove("hideControl");
-    document.getElementById("btnAddContract").classList.remove("hideControl");
 
     document.getElementById("tdName").innerHTML = name;
-    document.getElementById("tdDoc").innerHTML = doc;
-    document.getElementById("tdEmail").innerHTML = email;
+    document.getElementById("tdDoc").innerHTML = "<b>Documento: </b>" + doc;
 
+    if (email != "") {
+        document.getElementById("divEmail").style.display = "none";
+    }
+    document.getElementById("tdEmail").innerHTML = email;
     document.getElementById("tblContractor").style.display = "none";
 
 }
@@ -136,24 +183,151 @@ function validateChars(event) {
     }
 }
 
+function addAddition() {
+
+    var adDateSus = document.getElementById("idAdDateSus");
+    var adDateFin = document.getElementById("idAdDateFin");
+    var adValue = document.getElementById("idAdValue");
+
+    var susYear = $('#idAdDateSus').pickadate('picker').get('highlight', 'yyyy');
+    var susMonth = $('#idAdDateSus').pickadate('picker').get('highlight', 'mm');
+    var susDay = $('#idAdDateSus').pickadate('picker').get('highlight', 'dd');
+
+    var finYear = $('#idAdDateFin').pickadate('picker').get('highlight', 'yyyy');
+    var finMonth = $('#idAdDateFin').pickadate('picker').get('highlight', 'mm');
+    var finDay = $('#idAdDateFin').pickadate('picker').get('highlight', 'dd');
+
+    var susDate = susYear + "-" + susMonth + "-" + susDay;
+    var finDate = finYear + "-" + finMonth + "-" + finDay;
+
+    if (adDateSus.value.toString() == "" && adDateFin.value.toString() == "" && adValue.value.toString() == "") {
+        alert("Debe ingresar los datos requeridos");
+        return;
+    }
+
+    if (adDateSus.value.toString() > "" && adDateFin.value.toString() == "") {
+        alert("Debe escoger una fecha de terminación.");
+        return;
+    } else if (adDateSus.value.toString() == "" && adDateFin.value.toString() > "") {
+        alert("Debe escoger una fecha de suscripción.");
+        return;
+    } else if (susDate > finDate) {
+        alert('La Fecha de Suscripción no puede ser mayor a la Fecha de Terminación.');
+        idDateSus.focus();
+        return;
+    }
+
+    if (adValue.value.toString() > 0 && !valueRegex.test(adValue.value)) {
+        alert('El valor del contrato ingresado NO es válido.');
+        adValue.focus();
+        return;
+    }
+
+    contAdds++;
+    var additionObj = new Array();
+    additionObj.push("trAddition" + contAdds);
+    additionObj.push(adDateSus.value == "" ? "" : susDate);
+    additionObj.push(adDateFin.value == "" ? "" : finDate);
+    additionObj.push(adValue.value.toString());
+    additionArray.push(additionObj);
+
+    addAdditionRow(additionObj);
+
+    adDateSus.value = "";
+    adDateFin.value = "";
+    adValue.value = "";
+
+}
+
+function addAdditionRow(additionObj) {
+
+    var tableAddition = document.getElementById("tAddition");
+
+    var trAddition = document.createElement('tr');
+    trAddition.id = additionObj[0];
+
+    var tdNo = document.createElement('td');
+    tdNo.innerHTML = "" + additionArray.length;
+    tdNo.className += "center-align";
+    trAddition.appendChild(tdNo);
+
+    var tdDateSub = document.createElement('td');
+    tdDateSub.className += "center-align";
+    tdDateSub.innerHTML = additionObj[1] == "" ? "-" : additionObj[1];
+    trAddition.appendChild(tdDateSub);
+
+    var tdDateFin = document.createElement('td');
+    tdDateFin.className += "center-align";
+    tdDateFin.innerHTML = additionObj[2] == "" ? "-" : additionObj[2];
+    trAddition.appendChild(tdDateFin);
+
+    var tdValue = document.createElement('td');
+    tdValue.className += "center-align";
+    tdValue.innerHTML = additionObj[3] == "" ? "-" : additionObj[3];
+    trAddition.appendChild(tdValue);
+
+    var tdClear = document.createElement('td');
+    tdClear.className += "center-align";
+    var aClear = document.createElement('a');
+    aClear.className = "waves-effect waves-light";
+    aClear.href = "#!";
+
+    if (aClear.addEventListener) {  // all browsers except IE before version 9
+        aClear.addEventListener("click", function () {
+            removeAddition(trAddition.id);
+        }, false);
+    } else {
+        if (aClear.attachEvent) {   // IE before version 9
+            aClear.attachEvent("click", function () {
+                removeAddition(trAddition.id);
+            });
+        }
+    }
+
+    var aClearIcon = document.createElement('img');
+    aClearIcon.src = "../../Publics/images/ic_document_remove.png";
+    aClearIcon.className += "icon-addition";
+    aClear.appendChild(aClearIcon);
+    tdClear.appendChild(aClear);
+    trAddition.appendChild(tdClear);
+
+    tableAddition.appendChild(trAddition);
+
+}
+
+
 function remove(selectedRowId) {
 
     var selectedRow = document.getElementById(selectedRowId);
-    document.getElementById('tableContracts').removeChild(selectedRow);
+    var tBody = document.getElementById("tableContracts");
+    tBody.removeChild(selectedRow);
 
     var index = contractArray.indexOf(selectedRowId);
     contractArray.splice(index + 1, 1);
     contractArray.splice(index, 1);
 
+    var tRows = tBody.getElementsByTagName("tr");
+
+    for (var i = 0; i < tRows.length; i++) {
+
+        var cells = tRows[i].getElementsByTagName("td");
+        cells[0].innerHTML = i + 1;
+
+
+    }
+
 }
 
 function edit(selectedRowId) {
-    
+
     document.getElementById('modale').innerHTML = "Modificar Contrato";
-        
+
     isEditting = true;
-    currentRowId = selectedRowId;
-    var selectedData = contractArray[contractArray.indexOf("trContract" + selectedRowId) + 1];
+    currentRowId = selectedRowId.substring(10, selectedRowId.length);
+    var selectedData = contractArray[contractArray.indexOf(selectedRowId) + 1];
+    var addData = selectedData[6].toString().split(",");
+
+    console.log(currentRowId);
 
     $('#listContrato').val(selectedData[0]);
     $("#listContrato").material_select('update');
@@ -163,7 +337,46 @@ function edit(selectedRowId) {
     document.getElementById('valueId').value = selectedData[4];
     document.getElementById('objectId').value = selectedData[5];
 
+    //llenar tabla para adiciones
+    if (addData != "") {
+        for (var i = 0; i < addData.length; i += 4) {
+
+            var row = new Array(addData[i], addData[i + 1], addData[i + 2], addData[i + 3]);
+            additionArray.push(row);
+            addAdditionRow(row);
+
+        }
+    }
+
     $('#contractModal').modal('open');
+}
+
+function removeAddition(idTrAdd) {
+
+    var trAddition = document.getElementById(idTrAdd);
+    var tAddBody = document.getElementById("tAddition");
+    tAddBody.removeChild(trAddition);
+
+    for (var i = 0; i < additionArray.length; i++) {
+        var addObj = additionArray[i];
+
+        if (addObj[0] == idTrAdd) {
+            additionArray.splice(i, 1);
+            break;
+        }
+    }
+
+    var tAddRows = tAddBody.getElementsByTagName("tr");
+    var newCont = 1;
+    for (var i = 0; i < tAddRows.length; i++) {
+
+        if (tAddRows[i].id != "") {
+            var addCells = tAddRows[i].getElementsByTagName("td");
+            addCells[0].innerHTML = newCont;
+            newCont++;
+        }
+
+    }
 
 }
 
@@ -187,12 +400,6 @@ function validateContractData() {
     if (listContrato.value == 0) {
         alert('Debe escoger un tipo de contrato.');
         listContrato.focus();
-        return;
-    }
-
-    if (!contRegex.test(contId.value)) {
-        alert('El número de contrato NO es válido.');
-        contId.focus();
         return;
     }
 
@@ -230,27 +437,21 @@ function validateContractData() {
     }
 
     var contractData = new Array();
-    contractData.push(listContrato.value);
-    contractData.push(contId.value);
-    contractData.push(susDate);
-    contractData.push(finDate);
-    contractData.push(valueId.value);
-    contractData.push(objectId.value);
+    contractData.push(listContrato.value);//0
+    contractData.push(contId.value);//1
+    contractData.push(susDate);//2
+    contractData.push(finDate);//3
+    contractData.push(valueId.value);//4
+    contractData.push(objectId.value);//5
+    contractData.push(additionArray.length == 0 ? "" : additionArray);//6
 
-    if (isEditting) {        
-        editContract(contractData);        
+    if (isEditting) {
+        editContract(contractData);
     } else {
         addContract(contractData);
     }
 
-    $('#listContrato').val('0');
-    $('#listContrato').material_select();
-    contId.value = "";
-    idDateSus.value = "";
-    idDateFin.value = "";
-    valueId.value = "";
-    objectId.value = "";
-
+    clearModal();
     closeModal();
     isEditting = false;
 
@@ -267,7 +468,7 @@ function addContract(contractData) {
     trContract.id = trId;
 
     var tdNo = document.createElement('td');
-    tdNo.innerHTML = "" + contractArray.length;
+    tdNo.innerHTML = "" + contractArray.length / 2;//se divide entre 2 para no contar los id de cada row
     trContract.appendChild(tdNo);
 
     var tdContractType = document.createElement('td');
@@ -285,14 +486,14 @@ function addContract(contractData) {
     aEditContract.className = "waves-effect waves-light";
     aEditContract.href = "#!";
 
-    if (aEditContract.addEventListener) {  // all browsers except IE before version 9
+    if (aEditContract.addEventListener) {  //all browsers except IE before version 9
         aEditContract.addEventListener("click", function () {
-            edit(contTr);
+            edit(trId);
         }, false);
     } else {
-        if (aEditContract.attachEvent) {   // IE before version 9
+        if (aEditContract.attachEvent) {   //IE before version 9
             aEditContract.attachEvent("click", function () {
-                edit(contTr);
+                edit(trId);
             });
         }
     }
@@ -336,7 +537,7 @@ function addContract(contractData) {
 }
 
 function editContract(contractData) {
-        
+
     contractArray[contractArray.indexOf("trContract" + currentRowId) + 1] = contractData;
 
     var tdContractType = document.getElementById('tdContractType' + currentRowId);
@@ -349,13 +550,64 @@ function editContract(contractData) {
 
 function saveContractInfo() {
 
-
     if (contractArray.length == 0) {
         alert("No hay ningún contrato ingresado aun.");
         return;
     }
 
+    var emailId = document.getElementById("emailId");
+    if (document.getElementById("divEmail").style.display == "" && !emailRegex.test(emailId.value)) {
+        alert('El email NO es válido.');
+        emailId.focus();
+        return;
+    }
 
+    jQuery.ajax({
+        type: 'POST',
+        url: 'http://localhost/Celab/Celab/Controllers/CRegistContract.php',
+        async: true,
+        data: {idContractor: idContractor, bdContractor: bdContractor, contractArray: contractArray, emailContractor: emailId.value},
+        timeout: 0,
+        success: function (respuesta) {
 
+            if (respuesta.toString().trim() == 1) {
+                alert("Los datos fueron registrados con éxito.");
+                location.href = "../Views/frmRegistContract.php";
+            } else {
+                alert("No se pudieron registrar los datos, vuelva a intentarlo.");
+                console.log(respuesta);
+            }
+
+        }, error: function () {
+            alert('Unexpected Error');
+        }
+    });
+}
+
+function clearModal() {
+
+    $('#listContrato').val('0');
+    $('#listContrato').material_select();
+    document.getElementById('contId').value = "";
+    document.getElementById('idDateSus').value = "";
+    $('#idDateSus').pickadate('picker').clear();
+    document.getElementById('idDateFin').value = "";
+    $('#idDateFin').pickadate('picker').clear();
+    document.getElementById('valueId').value = "";
+    document.getElementById('objectId').value = "";
+
+    $('#idAdDateSus').pickadate('picker').clear();
+    $('#idAdDateFin').pickadate('picker').clear();
+
+    additionArray = new Array();
+
+    var tableAddition = document.getElementById("tAddition");
+    var tableRows = tableAddition.getElementsByTagName('tr');
+    for (var i = 0; i < tableRows.length; i++) {
+        if (tableRows[i].id != "") {
+            tableAddition.removeChild(tableRows[i]);
+            i--;
+        }
+    }
 
 }
