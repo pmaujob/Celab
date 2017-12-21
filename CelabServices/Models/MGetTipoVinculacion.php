@@ -11,9 +11,10 @@ class MGetVinculationType {
     public static function getTypes() {
 
         $sql = 'select id, '
-                . 'des '
+                . 'des, '
+                . 'idvin '
                 . 'from get_tipo_vinculacion() '
-                . 'as ("id" smallint, "des" varchar);';
+                . 'as ("id" smallint, "des" varchar, "idvin" varchar);';
 
         return ConnectionDB::consult(new HostData(), $sql);
     }

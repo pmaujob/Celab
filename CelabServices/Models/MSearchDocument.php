@@ -4,68 +4,51 @@
 $pRootC = $_SESSION['pRootC'];
 
 require_once $pRootC . '/Libraries/ConnectionDB.php';
+require_once $pRootC . '/Libraries/HostData.php';
 
 class MSearchDocument {
 
-    public static function getDataBase($docType) {
+    public static function getContracts($document, $docType) {
 
-        $sql = "SELECT bd.id_bd,"//0
-                . "bd.descripcion,"//1
-                . "bd.motor,"//2
-                . "bd.usuario,"//3
-                . "bd.pass,"//4
-                . "bd.nombre_bd,"//5
-                . "bd.host "//6
-                . "FROM base_datos AS bd "
-                . "INNER JOIN base_vinculacion AS bv ON bd.id_bd = bv.id_bd "
-                . "INNER JOIN tipo_vinculacion AS tv ON tv.id_vitipo = bv.id_vitipo "
-                . "WHERE tv.id_vitipo = $docType "
-                . "ORDER BY bv.bd_principal;";
-
-        return ConnectionDB::consult(new HostData(), $sql);
-    }
-
-    public static function documentExists($document, $docType) {
-
-        $bdRes = self::getDataBase($docType);
-        $foundDoc = 0;
         $sql = '';
 
-        foreach ($bdRes as $bd) {
+        switch ($docType) {
 
-            //Hacer SQL estático dado que los campos de cada BD podrían NO coincidir            
-            switch ($bd[5]) {
+            case "V1":
+                //consulta para ACTIVOS              
 
-                case "sysman":
+                break;
 
-                    break;
+            case "V2":
+                //consulta para EXFUNCIONARIOS
+                break;
 
-                case "talento":
+            case "V3":
+                //consulta para PENSIONADOS
+                break;
 
-                    break;
+            case "V4":
+                //consulta para NO PENSIONADOS
+                break;
 
-                case "pasyvocol":
-
-                    break;
-
-                case "siscontra":
-
-                    break;
-
-                case "msia":
-
-                    break;
-
-                default:
-                    echo "Base de datos no reconocida: " . $bd[5] . ".";
-                    break;
-            }
-
-            $foundDoc = ConnectionDB::consult(new HostData($bd[2], $bd[3], $bd[4], $bd[5], $bd[6]), $sql);
+            case "V5":
+                //Consulta para CONTRATISTAS                
+                
+                $sql = 'select nom,'//0
+                        . 'doc,'//1
+                        . 'email,'//2
+                        . 'num,'//3
+                        . 'tip,'//4
+                        . 'fecs,'//5
+                        . 'fect,'//6
+                        . 'val,'//7
+                        . 'obj,'//8
+                        . 'bd '//9
+                        . 'from get_contratos(\'' . $document . '\') as ("nom" varchar, "doc" varchar, "email" varchar, "num" varchar, "tip" varchar, "fecs" varchar, "fect" varchar, "val" money, "obj" varchar, "bd" varchar)';
+                break;
         }
-
-        $con = new ConnectionDB();
-        return $con->consult("PG", $sql);
+                
+        return ConnectionDB::consult(new HostData(), $sql);
     }
 
 }
