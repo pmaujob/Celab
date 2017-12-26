@@ -8,13 +8,34 @@ $pRootHtml = $_SESSION['pRootHtml'];
 
 $opModel = $_POST['opModel'];
 
-if ($opModel == "MOD_VINCULATION_TYPE") {
+switch ($opModel) {
 
-    header("Location:  $pRootHtml/CelabServices/Controllers/ManagementWS.php?opModel=" . $opModel);
-} else if ($opModel == "MOD_SEARCH_CONTRACTOR") {
+    case "MOD_VINCULATION_TYPE":
 
-    $document = $_POST['document'];
-    $docType = $_POST['docType'];
-    header("Location:  $pRootHtml/CelabServices/Controllers/ManagementWS.php?opModel=" . $opModel . "&document=" . $document . "&docType=" . $docType);
+        header("Location:  $pRootHtml/CelabServices/Controllers/ManagementWS.php?opModel=" . $opModel);
+
+        break;
+
+    case "MOD_SEARCH_CONTRACTOR":
+
+        $document = $_POST['document'];
+        $docType = $_POST['docType'];
+        header("Location:  $pRootHtml/CelabServices/Controllers/ManagementWS.php?opModel=" . $opModel . "&document=" . $document . "&docType=" . $docType);
+
+        break;
+
+    case "CERT_CONTRACTOR":
+
+        $_SESSION['contractorData'] = $_POST['contractorData'];
+        $_SESSION['contractData'] = $_POST['contractData'];
+        header("Location:  $pRootHtml/CelabServices/Views/certificates/contractorCert.php");
+
+        break;
+
+    default:
+
+        echo "MOD_ERROR";
+
+        break;
 }
 ?>
